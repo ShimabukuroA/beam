@@ -13,6 +13,7 @@ def splitline(row):
 	uf = parse[9] #Sigla de UF
 	return (uf)
 
+
 # Create data pipeline.
 pipeline = beam.Pipeline()
 
@@ -23,13 +24,15 @@ lines = pipeline | beam.io.ReadFromText('./data/cadastro_ies.csv')
 words = lines  | "split" >> beam.Map(splitline)
 
 # Mapping each UF initials in a tuple.
-maps = words	| "map" >> beam.Map(lambda row: (str(row),1))
+maps = words	| "map" >> beam.Map(lambda row: (row,1))
 
 # Group by UF initials and count total number of educational institutions per UF.
 counts = maps    | "group" >> beam.CombinePerKey(sum)
 
+result = counts	| "max" >> beam.FlatMap(lambda a,b: a if a[1] > b[1] else b)
+
 # Print result.
-counts |  "print" >> beam.Map(lambda row: print("%s : %d" %(row[0], row[1])))
+result |  "print" >> beam.Map(lambda row: print("%s : %d" %(row[0], row[1])))
 
 # Run the pipeline.
 pipeline.run()
