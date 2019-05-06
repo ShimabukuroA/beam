@@ -43,4 +43,6 @@ counts	| "sort" >> beam.ParDo(sortresults)
 
 # Run the pipeline.
 pipeline.run()
+
+#Print some results
 print("UF com mais unidades de ensino superior:\n%s:%s unidades" % (sortedlist[0][0], sortedlist[0][1]))
