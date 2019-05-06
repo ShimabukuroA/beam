@@ -42,7 +42,7 @@ dezenas = dezenas_linha | "split" >> beam.FlatMap(lambda x: x.split(','))
 #Map each number in a tuple.
 pares = dezenas | "pair" >> beam.Map(lambda x: (x,1))
 
-#Count the number of ocurrency of each draft number.
+#Count the number of ocurrency of each drafted number.
 somas = pares | "sum" >> beam.CombinePerKey(sum)
 
 #Sort results.
