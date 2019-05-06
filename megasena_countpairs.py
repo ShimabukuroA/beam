@@ -1,17 +1,17 @@
 # Author: Amauri
 # Date: 06/05/2019
 #
-# Project to learn and develop data pipeline with Apache Beam using dataset from MegaSena.
+# Project to count the number of ocurrencies of couples of drafted numbers.
 
 #Import modules.
 from __future__ import print_function
 import apache_beam as beam
 from itertools import combinations
 
-#Create a list to store the results after sort.
+# Create a list to store the results after sort.
 sortedlist = []
 
-#Function to split each line of .csv file.
+# Function to split each line of .csv file and return a list of all possibles combinations of 2 drafted numbers.
 def splitline(row):
 	parse = row.split(";")
 	dezena1 = int(parse[2])
@@ -25,11 +25,12 @@ def splitline(row):
 	combinacoes = list(combinations(sorteio, 2))
 	return combinacoes
 
-#Function to store and sort results in a list.
+# Function to store and sort results in a list.
 def sortresults(row):
 	sortedlist.append(row) 
 	sortedlist.sort(key=lambda x : x[1], reverse = True)
 
+# Function to split list of tuples.
 def splitagain(row):
 	for i in row:
 		yield i
@@ -40,15 +41,16 @@ pipeline = beam.Pipeline()
 # Read each line from .csv file.
 lines = pipeline | "read" >> beam.io.ReadFromText('./data/mega.csv')
 
-#Extract only the 6 draft numbers.
+# Split each line from .csv file.
 dezenas_linha = lines  | "splitline" >> beam.Map(splitline)
 
+# Split all possibles combinations of 2 drafted numbers.
 pares = dezenas_linha | "splitagain" >> beam.FlatMap(splitagain)
 
-#Map each number in a tuple.
+#Map each couple in a tuple.
 mapping = pares | "pair" >> beam.Map(lambda x: (x,1))
 
-#Count the number of ocurrency of each draft number.
+#Count the number of ocurrency of each couple of draft numbers.
 somas = mapping | "sum" >> beam.CombinePerKey(sum)
 
 #Sort results.
