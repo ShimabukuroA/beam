@@ -31,7 +31,7 @@ def sortresults(row):
 pipeline = beam.Pipeline()
 
 # Read each line from .csv file.
-lines = pipeline | beam.io.ReadFromText('./data/mega.csv')
+lines = pipeline | "read" >> beam.io.ReadFromText('./data/mega.csv')
 
 #Extract only the 6 draft numbers.
 dezenas_linha = lines  | "splitline" >> beam.Map(splitline)
