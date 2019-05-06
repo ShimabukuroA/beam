@@ -1,7 +1,7 @@
 # Author: Amauri
 # Date: 29/04/2019
 #
-# Project to learn and develop data pipeline with Apache Beam and Python.
+# Project to learn and develop data pipeline with Apache Beam and Python with IES dataset.
 
 from __future__ import print_function
 import apache_beam as beam
